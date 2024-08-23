@@ -1,0 +1,31 @@
+version: '3.7'
+
+volumes:
+    logs:
+        driver: local
+
+services:
+    slim:
+        container_name: php_slim
+        build:
+            context: ./php
+        working_dir: /var/www
+        command: php -S 0.0.0.0:8080 -t public
+        environment:
+            docker: "true"
+        ports:
+            - "8080:8080"
+        volumes:
+            - .:/var/www
+            - logs:/var/www/logs
+    db:
+        image: mariadb
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: slim-test
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+        volumes:
+            - ./data:/var/lib/mysql
+        ports:
+            - "3306:3306"
